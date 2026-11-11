@@ -56,9 +56,9 @@
   /* ---- トップの skc ---- */
   .brand {
     text-align: center;
-    padding: 36px 0 20px;
+    padding: 18px 0 12px;
     font-weight: 900;
-    font-size: clamp(64px, 22vw, 96px);
+    font-size: 44px;
     line-height: 1;
     letter-spacing: -0.04em;
     color: var(--green);
@@ -67,7 +67,7 @@
   .sheet {
     background: var(--sheet);
     border-radius: 24px;
-    padding: 28px 22px 22px;
+    padding: 22px 20px 20px;
     border: 1px solid var(--line);
   }
 
@@ -142,7 +142,11 @@
   details[open] summary::after { content: "−"; }
   summary:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
   .examples { list-style: none; margin-top: 10px; display: grid; gap: 8px; }
-  .examples li { font-size: 15px; font-weight: 700; padding-left: 2px; }
+  .examples li {
+    display: grid; grid-template-columns: 1.4em 1fr;
+    font-size: 15px; font-weight: 700; line-height: 1.6;
+  }
+  .nw { display: inline-block; }
 
   .second-rule { margin-top: 22px; font-weight: 700; font-size: 16px; }
 
@@ -170,6 +174,35 @@
   }
   .choice .ng .pic::before { transform: translate(-50%, -50%) rotate(45deg); }
   .choice .ng .pic::after  { transform: translate(-50%, -50%) rotate(-45deg); }
+
+  /* ---- 注意を引くアニメーション（開いたときに1回だけ）---- */
+  #page1.active .top-rule { animation: glow 1.2s ease-out .3s 2; }
+  @keyframes glow {
+    0%   { box-shadow: 0 0 0 0 rgba(6,199,85,.45); }
+    100% { box-shadow: 0 0 0 14px rgba(6,199,85,0); }
+  }
+  #page1.active .choice .ng .pic::before { animation: x1 .35s ease-out 1.6s both; }
+  #page1.active .choice .ng .pic::after  { animation: x2 .35s ease-out 1.9s both; }
+  @keyframes x1 {
+    from { transform: translate(-50%, -50%) rotate(45deg) scaleX(0); }
+    to   { transform: translate(-50%, -50%) rotate(45deg) scaleX(1); }
+  }
+  @keyframes x2 {
+    from { transform: translate(-50%, -50%) rotate(-45deg) scaleX(0); }
+    to   { transform: translate(-50%, -50%) rotate(-45deg) scaleX(1); }
+  }
+  #page1.active .choice .ok .pic { animation: pop .5s ease-out 2.3s both; }
+  @keyframes pop {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #page1.active .top-rule,
+    #page1.active .choice .ng .pic::before,
+    #page1.active .choice .ng .pic::after,
+    #page1.active .choice .ok .pic { animation: none; }
+  }
   .choice .ok .pic { box-shadow: 0 0 0 4px var(--green); }
   .choice figcaption { margin-top: 8px; font-size: 14px; font-weight: 900; }
   .choice .ng figcaption { color: #E5383B; }
@@ -284,17 +317,17 @@
 
       <div class="top-rule">
         <span class="badge">1番重要</span>
-        <p class="lead">グループLINEに通知を入れないでください。</p>
+        <p class="lead"><span class="nw">グループLINEに</span><span class="nw">通知を入れないでください。</span></p>
         <details>
           <summary>例を見る</summary>
           <ul class="examples">
-            <li>❌「よろしくお願いします」などのご挨拶</li>
-            <li>❌「今日参加しても良いですか？」などの連絡</li>
+            <li><span>❌</span><span><span class="nw">「よろしくお願いします」</span><span class="nw">などのご挨拶</span></span></li>
+            <li><span>❌</span><span><span class="nw">「今日参加しても良いですか？」</span><span class="nw">などのご連絡</span></span></li>
           </ul>
         </details>
       </div>
 
-      <p class="second-rule">入れてしまった場合は「削除」ではなく「送信取り消し」を押してください。</p>
+      <p class="second-rule"><span class="nw">入れてしまった場合は</span><span class="nw">「削除」ではなく</span><span class="nw">「送信取り消し」を</span><span class="nw">押してください。</span></p>
       <div class="choice">
         <figure class="ng">
           <div class="pic"><img src="data:image/jpeg;base64,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" alt="削除ボタン"></div>
@@ -338,7 +371,7 @@
      ========================================================= */
   const CONFIG = {
     // グループLINEの招待リンク
-    lineUrl: "https://line.me/ti/g/jPVUnU4FpY",
+    lineUrl: "https://line.me/ti/g/235H8KdRtd",
 
     // ボタンが押せるようになるまでの秒数
     waitSeconds: 5,
