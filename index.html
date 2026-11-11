@@ -148,17 +148,17 @@
   }
   .nw { display: inline-block; }
 
-  .second-rule { margin-top: 22px; font-weight: 700; font-size: 16px; }
+  .second-rule { margin-top: 4px; font-weight: 700; font-size: 16px; }
 
   /* 「削除」ではなく「送信取消」の図解 */
   .choice {
     display: flex; justify-content: center; gap: 18px;
-    margin-top: 14px;
+    margin-top: 22px; margin-bottom: 8px;
   }
   .choice figure { text-align: center; }
   .choice .pic {
     position: relative;
-    width: 96px; height: 96px;
+    width: 112px; height: 112px;
     border-radius: 18px;
     overflow: hidden;
   }
@@ -181,8 +181,8 @@
     0%   { box-shadow: 0 0 0 0 rgba(6,199,85,.45); }
     100% { box-shadow: 0 0 0 14px rgba(6,199,85,0); }
   }
-  #page1.active .choice .ng .pic::before { animation: x1 .35s ease-out 1.6s both; }
-  #page1.active .choice .ng .pic::after  { animation: x2 .35s ease-out 1.9s both; }
+  #page2.active .choice .ng .pic::before { animation: x1 .35s ease-out .6s both; }
+  #page2.active .choice .ng .pic::after  { animation: x2 .35s ease-out .9s both; }
   @keyframes x1 {
     from { transform: translate(-50%, -50%) rotate(45deg) scaleX(0); }
     to   { transform: translate(-50%, -50%) rotate(45deg) scaleX(1); }
@@ -191,7 +191,7 @@
     from { transform: translate(-50%, -50%) rotate(-45deg) scaleX(0); }
     to   { transform: translate(-50%, -50%) rotate(-45deg) scaleX(1); }
   }
-  #page1.active .choice .ok .pic { animation: pop .5s ease-out 2.3s both; }
+  #page2.active .choice .ok .pic { animation: pop .5s ease-out 1.4s both; }
   @keyframes pop {
     0%   { transform: scale(1); }
     50%  { transform: scale(1.08); }
@@ -199,9 +199,9 @@
   }
   @media (prefers-reduced-motion: reduce) {
     #page1.active .top-rule,
-    #page1.active .choice .ng .pic::before,
-    #page1.active .choice .ng .pic::after,
-    #page1.active .choice .ok .pic { animation: none; }
+    #page2.active .choice .ng .pic::before,
+    #page2.active .choice .ng .pic::after,
+    #page2.active .choice .ok .pic { animation: none; }
   }
   .choice .ok .pic { box-shadow: 0 0 0 4px var(--green); }
   .choice figcaption { margin-top: 8px; font-size: 14px; font-weight: 900; }
@@ -312,20 +312,31 @@
 
     <!-- ===== 1ページ目：注意事項 ===== -->
     <section class="page active" id="page1">
-      <p class="step">1 / 2</p>
+      <p class="step">1 / 3</p>
       <h1>参加前の注意事項</h1>
 
       <div class="top-rule">
         <span class="badge">1番重要</span>
         <p class="lead"><span class="nw">グループLINEに</span><span class="nw">通知を入れないでください。</span></p>
-        <details>
-          <summary>例を見る</summary>
+        <details open>
+          <summary>例</summary>
           <ul class="examples">
             <li><span>❌</span><span><span class="nw">「よろしくお願いします」</span><span class="nw">などのご挨拶</span></span></li>
             <li><span>❌</span><span><span class="nw">「今日参加しても良いですか？」</span><span class="nw">などのご連絡</span></span></li>
           </ul>
         </details>
       </div>
+
+      <div class="actions">
+        <button type="button" class="btn back" id="back1"><span>戻る</span></button>
+        <button type="button" class="btn go" id="next1"><span>次へ</span></button>
+      </div>
+    </section>
+
+    <!-- ===== 2ページ目：送信取り消し ===== -->
+    <section class="page" id="page2">
+      <p class="step">2 / 3</p>
+      <h1>間違えて入れてしまったら</h1>
 
       <p class="second-rule"><span class="nw">入れてしまった場合は</span><span class="nw">「削除」ではなく</span><span class="nw">「送信取り消し」を</span><span class="nw">押してください。</span></p>
       <div class="choice">
@@ -340,14 +351,14 @@
       </div>
 
       <div class="actions">
-        <button type="button" class="btn back" id="back1"><span>戻る</span></button>
-        <button type="button" class="btn go" id="next1"><span>次へ</span></button>
+        <button type="button" class="btn back" id="back2"><span>戻る</span></button>
+        <button type="button" class="btn go" id="next2" data-nowait="1"><span>次へ</span></button>
       </div>
     </section>
 
-    <!-- ===== 2ページ目：管理者 ===== -->
-    <section class="page" id="page2">
-      <p class="step">2 / 2</p>
+    <!-- ===== 3ページ目：管理者 ===== -->
+    <section class="page" id="page3">
+      <p class="step">3 / 3</p>
       <h1>管理者</h1>
 
       <div class="admins" id="admins"></div>
@@ -357,7 +368,7 @@
       <p class="note">ノートを閲覧してください。</p>
 
       <div class="actions">
-        <button type="button" class="btn back" id="back2"><span>戻る</span></button>
+        <button type="button" class="btn back" id="back3"><span>戻る</span></button>
         <a class="btn go" id="toLine" href="#" target="_blank" rel="noopener"><span>LINEグループへ</span></a>
       </div>
     </section>
@@ -446,13 +457,17 @@
     document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
     document.getElementById("page" + n).classList.add("active");
     window.scrollTo(0, 0);
-    lock(document.querySelector("#page" + n + " .btn.go"));
+    const go = document.querySelector("#page" + n + " .btn.go");
+    if (go.dataset.nowait) { clearInterval(timer); return; }   // このページはカウント不要
+    lock(go);
   }
 
   document.getElementById("next1").addEventListener("click", () => {
     if (!document.getElementById("next1").classList.contains("locked")) show(2);
   });
+  document.getElementById("next2").addEventListener("click", () => show(3));
   document.getElementById("back2").addEventListener("click", () => show(1));
+  document.getElementById("back3").addEventListener("click", () => show(2));
   document.getElementById("back1").addEventListener("click", () => history.back());
 
   show(1);
